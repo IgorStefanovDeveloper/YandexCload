@@ -1,0 +1,20 @@
+{
+  "name": "localtests/yandexcload",
+  "type": "project",
+  "description": "The yandexcloud local project.",
+  "require": {
+    "php": ">=7.4.0",
+    "php-http/curl-client": ">=1.4",
+    "arhitector/yandex": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Controllers\\": "/Controllers/",
+      "Modules\\": "/Modules/"
+    },
+    "classmap": [
+      "Controllers/",
+      "Modules/"
+    ]
+  }
+}
