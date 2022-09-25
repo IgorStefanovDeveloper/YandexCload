@@ -1,5 +1,6 @@
-node_modules/
-upload/*
-vendor/
-package-lock.json
-test.php
+.idea/*
+.node_modules/*
+.upload/*
+.vendor/*
+.package-lock.json
+.test.php
