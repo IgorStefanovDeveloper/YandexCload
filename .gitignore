@@ -1,5 +1,5 @@
-/node_modules/*
-/upload/*
-/vendor/*
-/package-lock.json
-/test.php
+node_modules/
+upload/*
+vendor/
+package-lock.json
+test.php
