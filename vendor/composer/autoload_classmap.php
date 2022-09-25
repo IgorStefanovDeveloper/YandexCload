@@ -224,6 +224,7 @@ return array(
     'League\\Event\\ListenerProviderInterface' => $vendorDir . '/league/event/src/ListenerProviderInterface.php',
     'League\\Event\\OneTimeListener' => $vendorDir . '/league/event/src/OneTimeListener.php',
     'Modules\\CloudDiskProvider' => $baseDir . '/Modules/Clouddiskprovider/clouddiskprovider.php',
+    'Modules\\CloudDiskProvider\\Abstracts\\Provider' => $baseDir . '/Modules/Clouddiskprovider/Abstracts/provider.php',
     'Modules\\CloudDiskProvider\\Classes\\YandexDisk' => $baseDir . '/Modules/Clouddiskprovider/Classes/yandexdisk.php',
     'Modules\\CloudDiskProvider\\Interfaces\\ICloudAuth' => $baseDir . '/Modules/Clouddiskprovider/Interfaces/icloudauth.php',
     'Modules\\CloudDiskProvider\\Interfaces\\ICloudProvider' => $baseDir . '/Modules/Clouddiskprovider/Interfaces/icloudprovider.php',

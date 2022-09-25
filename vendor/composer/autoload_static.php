@@ -340,6 +340,7 @@ class ComposerStaticInitbb96cb8332011b8eec99a8c1e06aa4d0
         'League\\Event\\ListenerProviderInterface' => __DIR__ . '/..' . '/league/event/src/ListenerProviderInterface.php',
         'League\\Event\\OneTimeListener' => __DIR__ . '/..' . '/league/event/src/OneTimeListener.php',
         'Modules\\CloudDiskProvider' => __DIR__ . '/../..' . '/Modules/Clouddiskprovider/clouddiskprovider.php',
+        'Modules\\CloudDiskProvider\\Abstracts\\Provider' => __DIR__ . '/../..' . '/Modules/Clouddiskprovider/Abstracts/provider.php',
         'Modules\\CloudDiskProvider\\Classes\\YandexDisk' => __DIR__ . '/../..' . '/Modules/Clouddiskprovider/Classes/yandexdisk.php',
         'Modules\\CloudDiskProvider\\Interfaces\\ICloudAuth' => __DIR__ . '/../..' . '/Modules/Clouddiskprovider/Interfaces/icloudauth.php',
         'Modules\\CloudDiskProvider\\Interfaces\\ICloudProvider' => __DIR__ . '/../..' . '/Modules/Clouddiskprovider/Interfaces/icloudprovider.php',

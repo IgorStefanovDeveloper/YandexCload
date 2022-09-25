@@ -3,8 +3,8 @@
   "type": "project",
   "description": "The yandexcloud local project.",
   "require": {
-    "php": ">=7.4.0",
-    "php-http/curl-client": ">=1.4",
+    "php": ">=7.4",
+    "php-http/curl-client": ">=v1.4.0",
     "arhitector/yandex": "dev-master"
   },
   "autoload": {

@@ -1,0 +1,14 @@
+/*!*******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./storage/scss/styles.scss ***!
+  \*******************************************************************************************************************/
+body {
+  background: green;
+}
+
+header {
+  background: red;
+}
+
+.content .yandex-button {
+  background: black;
+}

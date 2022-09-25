@@ -6,7 +6,6 @@ use Modules\CloudDiskProvider\Classes\YandexDisk as YandexDisk;
 
 class CloudDiskProvider
 {
-    const AUTHINTERFACE = "Modules\CloudDiskProvider\Interfaces\ICloudAuth";
     private $avalibleProviders = [];
 
     public function __construct()

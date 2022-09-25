@@ -2,34 +2,24 @@
 
 namespace Modules\CloudDiskProvider\Classes;
 
-use Modules\CloudDiskProvider\Interfaces\ICloudAuth as ICloudAuth;
-use Modules\CloudDiskProvider\Interfaces\ICloudProvider as ICloudProvider;
+use Modules\CloudDiskProvider\Abstracts\Provider;
 
 /*
  * Class to work with Yandex disk
  * */
 
-class YandexDisk implements ICloudProvider, ICloudAuth
+class YandexDisk extends Provider
 {
     const AUTHPATTERNSTR = "https://oauth.yandex.ru/authorize?response_type=code&client_id=";
     const TOKENPATH = "https://oauth.yandex.ru/token";
     const AUTHTOKEN = "5c0321478480456a8f4abbdf0fd9fd1b";
     const SECRETTOKEN = "2673716ec38a4b938e3ed965c1956f3f";
+    const NAMEPROVIDER = "Яндекс диск";
 
     protected $disk;
-    protected $tokenOAuth;
-    protected $accessCode;
-    protected $tokenJWT;
-    public $providerLabel;
 
     public function __construct()
     {
-        $this->providerLabel = "Яндекс диск";
-    }
-
-    public function getProviderLabel()
-    {
-        return $this->providerLabel;
     }
 
     public function showDiskContent($accessCode): array

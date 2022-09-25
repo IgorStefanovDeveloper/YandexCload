@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'localtests/yandexcload',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'f6e65f749f71e001b7291fcf26b7fa6479e04060',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,9 +49,9 @@
             'dev_requirement' => false,
         ),
         'localtests/yandexcload' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'f6e65f749f71e001b7291fcf26b7fa6479e04060',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
