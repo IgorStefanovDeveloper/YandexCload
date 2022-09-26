@@ -1,0 +1,135 @@
+$mainColor: #61CC4A;
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid $mainColor;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.providers {
+  margin: 30px 0;
+
+  &-button {
+    display: inline-block;
+    background: #000000;
+    border-radius: 12px;
+    color: white;
+    padding: 20px 40px;
+    margin-top: 10px;
+    text-decoration: none;
+
+    img {
+      background-color: red;
+      padding: 10px 13px;
+      border-radius: 27px;
+      margin-right: 5px;
+    }
+  }
+
+  &-button:hover {
+    color: red;
+  }
+}
+
+.disk {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  &-info {
+    flex: 3;
+
+    &-table {
+      box-shadow: 0 12px 65px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-flow: row wrap;
+      border: 1px solid $mainColor;
+      border-radius: 10px;
+      margin: 10px 0;
+      background-color: black;
+      padding: 10px;
+      color: white;
+
+      &-item {
+        display: flex;
+        width: 100%;
+        margin: 10px 0;
+        justify-content: space-around;
+        border-bottom: 1px dotted $mainColor;
+
+        &-name {
+          flex: 150px;
+          display: flex;
+
+          input {
+            background: black;
+            color: white;
+            margin-bottom: 5px;
+          }
+
+          span {
+            font-size: 12px;
+            margin-right: 4px;
+            line-height: inherit;
+            vertical-align: bottom;
+            display: inline;
+            line-height: 34px;
+          }
+        }
+
+        &-size {
+          display: flex;
+          flex: 50px;
+        }
+
+        &-actions {
+          display: flex;
+          flex-flow: row;
+          justify-content: space-around;
+          flex: 2;
+
+          &-btn {
+            cursor: pointer;
+          }
+
+          &-btn:hover {
+            color: $mainColor;
+          }
+        }
+      }
+    }
+  }
+
+  &-form {
+    flex: 2;
+  }
+}
+
+.nav {
+  width: 100%;
+
+  ul {
+    list-style: none;
+    display: flex;
+    align-content: center;
+    margin: 10px auto;
+    justify-content: space-around;
+    padding: 0;
+
+    li {
+      margin: 0 10px;
+
+      a {
+        color: $mainColor;
+      }
+    }
+  }
+}

@@ -12,32 +12,57 @@ class YandexDisk extends Provider
 {
     const AUTHPATTERNSTR = "https://oauth.yandex.ru/authorize?response_type=code&client_id=";
     const TOKENPATH = "https://oauth.yandex.ru/token";
+    //TODO hide tokens
     const AUTHTOKEN = "5c0321478480456a8f4abbdf0fd9fd1b";
     const SECRETTOKEN = "2673716ec38a4b938e3ed965c1956f3f";
     const NAMEPROVIDER = "Яндекс диск";
-
-    protected $disk;
+    const PAGESIZE = 20;
+    public $accessCode;
 
     public function __construct()
     {
     }
 
-    public function showDiskContent($accessCode): array
+    public function setAccessCode($code): void
     {
-        $disk = new \Arhitector\Yandex\Disk($accessCode);
-        return ["totalSize" => $disk->total_space, 'freeSpace' => $disk['free_space'], 'items' => $disk->getResources()];
+        $this->accessCode = $code;
     }
 
-    public function deleteFile($accessCode, $fileName)
+    public function showDiskContent($page = 1): array
+    {
+        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+
+        return [
+            "totalSize" => $disk->get('total_space'),
+            'freeSpace' => $disk->get('free_space'),
+            'items' => $disk->getResources(self::PAGESIZE, ($page - 1) * self::PAGESIZE),
+            'count' => $disk->getResources(PHP_INT_MAX)->count(),
+            'nav' => self::PAGESIZE
+        ];
+    }
+
+    public function deleteFile($path)
     {
     }
 
-    public function createNewFile($accessCode, $fileName)
+    public function createNewFile($fileName)
     {
     }
 
-    public function downloadFile($accessCode, $fileName)
+    public function downloadFile($path): string
     {
+        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+        $resource = $disk->getResource($path, 0);
+        $file = '/upload/tmp/' . $resource->get('name');
+        $resource->download($_SERVER['DOCUMENT_ROOT'] . $file, true);
+        return $file;
+    }
+
+    public function renameFile($path, $newName, $oldName)
+    {
+        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+        $resource = $disk->getResource($path, 0);
+        return $resource->move(str_replace($oldName, $newName, $path));
     }
 
     public function getAuthLink(): string
@@ -45,7 +70,7 @@ class YandexDisk extends Provider
         return self::AUTHPATTERNSTR . self::AUTHTOKEN;
     }
 
-    public function extractAccessCode($authCode)
+    public function extractAccessCode($authCode): string
     {
         // post query for auth
         $query = array(

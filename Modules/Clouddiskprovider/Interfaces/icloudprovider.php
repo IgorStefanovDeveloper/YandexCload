@@ -10,9 +10,11 @@ interface ICloudProvider
 {
     public function showDiskContent($accessCode);
 
-    public function deleteFile($accessCode , $fileName);
+    public function deleteFile($path);
 
-    public function createNewFile($accessCode , $fileName);
+    public function createNewFile($fileName);
 
-    public function downloadFile($accessCode , $fileName);
+    public function downloadFile($path);
+
+    public function renameFile($path, $newName, $oldName);
 }

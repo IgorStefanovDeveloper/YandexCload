@@ -20,4 +20,9 @@ class RenderController
         include __DIR__ . "/../view/footer.php";
     }
 
+    public function renderTable($content)
+    {
+        include __DIR__ . "/../view/main.php";
+    }
+
 }
