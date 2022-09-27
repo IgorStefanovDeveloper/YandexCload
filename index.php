@@ -16,6 +16,14 @@ if (isset($_REQUEST['action'])) {
         $path = $_REQUEST['path'] ?? false;
         echo $indexController->actionDownload($path);
     }
+    if ($_REQUEST['action'] == "delete") {
+        $path = $_REQUEST['path'] ?? false;
+        echo $indexController->actionDelete($path);
+    }
+    if ($_REQUEST['action'] == "load") {
+        $path = $_REQUEST['path'] ?? false;
+        echo $indexController->actionLoad();
+    }
     exit;
 }
 if (!isset($_REQUEST['provider'])) {

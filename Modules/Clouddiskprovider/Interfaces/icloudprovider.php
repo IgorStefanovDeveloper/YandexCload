@@ -12,7 +12,7 @@ interface ICloudProvider
 
     public function deleteFile($path);
 
-    public function createNewFile($fileName);
+    public function createNewFile();
 
     public function downloadFile($path);
 

@@ -2,6 +2,7 @@
 
 namespace Modules\CloudDiskProvider\Classes;
 
+use Arhitector\Yandex\Disk;
 use Modules\CloudDiskProvider\Abstracts\Provider;
 
 /*
@@ -12,15 +13,17 @@ class YandexDisk extends Provider
 {
     const AUTHPATTERNSTR = "https://oauth.yandex.ru/authorize?response_type=code&client_id=";
     const TOKENPATH = "https://oauth.yandex.ru/token";
-    //TODO hide tokens
-    const AUTHTOKEN = "5c0321478480456a8f4abbdf0fd9fd1b";
-    const SECRETTOKEN = "2673716ec38a4b938e3ed965c1956f3f";
     const NAMEPROVIDER = "Яндекс диск";
     const PAGESIZE = 20;
-    public $accessCode;
+
+    private string $authToken;
+    private string $secretToken;
+    public string $accessCode;
 
     public function __construct()
     {
+        $this->authToken = file_get_contents(__DIR__ . "/../Tokens/.yandexdisk_auth");
+        $this->secretToken = file_get_contents(__DIR__ . "/../Tokens/.yandexdisk_secret");
     }
 
     public function setAccessCode($code): void
@@ -30,7 +33,7 @@ class YandexDisk extends Provider
 
     public function showDiskContent($page = 1): array
     {
-        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+        $disk = new Disk($this->accessCode);
 
         return [
             "totalSize" => $disk->get('total_space'),
@@ -43,15 +46,27 @@ class YandexDisk extends Provider
 
     public function deleteFile($path)
     {
+        $disk = new Disk($this->accessCode);
+        $resource = $disk->getResource($path, 0);
+        $resource->delete();
     }
 
-    public function createNewFile($fileName)
+    public function createNewFile()
     {
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/upload/tmp/' ;
+        $uploadFile = $uploadDir . basename($_FILES['file']['name']);
+        move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile);
+
+        $disk = new Disk($this->accessCode);
+        $resource = $disk->getResource(basename($_FILES['file']['name']));
+        if(!$resource->has()) {
+            $resource->upload($uploadFile);
+        }
     }
 
     public function downloadFile($path): string
     {
-        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+        $disk = new Disk($this->accessCode);
         $resource = $disk->getResource($path, 0);
         $file = '/upload/tmp/' . $resource->get('name');
         $resource->download($_SERVER['DOCUMENT_ROOT'] . $file, true);
@@ -60,28 +75,26 @@ class YandexDisk extends Provider
 
     public function renameFile($path, $newName, $oldName)
     {
-        $disk = new \Arhitector\Yandex\Disk($this->accessCode);
+        $disk = new Disk($this->accessCode);
         $resource = $disk->getResource($path, 0);
         return $resource->move(str_replace($oldName, $newName, $path));
     }
 
     public function getAuthLink(): string
     {
-        return self::AUTHPATTERNSTR . self::AUTHTOKEN;
+        return self::AUTHPATTERNSTR . $this->authToken;
     }
 
     public function extractAccessCode($authCode): string
     {
-        // post query for auth
         $query = array(
             'grant_type' => 'authorization_code',
             'code' => $authCode,
-            'client_id' => self::AUTHTOKEN,
-            'client_secret' => self::SECRETTOKEN
+            'client_id' => $this->authToken,
+            'client_secret' => $this->secretToken
         );
         $query = http_build_query($query);
 
-        // post query header
         $header = "Content-type: application/x-www-form-urlencoded";
 
         $opts = array('http' =>

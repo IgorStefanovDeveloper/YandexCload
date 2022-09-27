@@ -6,3 +6,6 @@ dist/*
 package-lock.json
 composer.lock
 test.php
+.env
+todo.txt
+Modules/Clouddiskprovider/Tokens

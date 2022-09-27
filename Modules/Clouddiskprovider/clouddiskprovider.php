@@ -6,7 +6,7 @@ use Modules\CloudDiskProvider\Classes\YandexDisk as YandexDisk;
 
 class CloudDiskProvider
 {
-    private $avalibleProviders = [];
+    private array $avalibleProviders;
 
     public function __construct()
     {
@@ -17,7 +17,6 @@ class CloudDiskProvider
     {
         $accessCode = false;
         //TODO add crypt
-        $accessCode = false;
         if (isset($_REQUEST['code']) && !isset($_COOKIE["access"])) {
             $accessCode = $this->avalibleProviders[$_REQUEST['provider']]->extractAccessCode($_REQUEST['code']);
             setcookie("access", $accessCode, time() + 3600, "/");
@@ -59,12 +58,25 @@ class CloudDiskProvider
         if (isset($_REQUEST['provider'])) {
             return $this->avalibleProviders[$_REQUEST['provider']]->renameFile($path, $newName, $oldName);
         }
+        return false;
     }
 
     public function downloadFile($path): string
     {
         $this->auth();
         return $this->avalibleProviders[$_REQUEST['provider']]->downloadFile($path);
+    }
+
+    public function createNewFile()
+    {
+        $this->auth();
+        $this->avalibleProviders[$_REQUEST['provider']]->createNewFile();
+    }
+
+    public function deleteFile($path)
+    {
+        $this->auth();
+        $this->avalibleProviders[$_REQUEST['provider']]->deleteFile($path);
     }
 }
 

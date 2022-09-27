@@ -71,7 +71,12 @@
 
         ?>
     </div>
-    <div class="disk-form">
-        <input type="file" name="file">
+    <div class="disk-upload">
+        <form class="disk-upload-form" enctype="multipart/form-data" action="/?action=load" method="POST">
+            <input type="hidden" name="MAX_FILE_SIZE" value="10000"/>
+            Отправить этот файл: <input class="userfile" name="userfile" type="file"/>
+            <input type="submit" value="Отправить файл"/>
+            <p class="disk-upload-text"></p>
+        </form>
     </div>
 </div>

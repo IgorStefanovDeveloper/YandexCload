@@ -3,6 +3,7 @@ class CloudDiskProvider {
         const renameBnt = document.querySelectorAll('.js-rename');
         const downloadBnt = document.querySelectorAll('.js-download');
         const deleteBnt = document.querySelectorAll('.js-delete');
+        const form = document.querySelector('.disk-upload-form');
 
         renameBnt.forEach((button) => {
             button.addEventListener('click', () => {
@@ -21,18 +22,21 @@ class CloudDiskProvider {
                     button.textContent = `Переименовать`;
                     button.classList.remove('active');
                     input.setAttribute('readonly', 'true');
-                    //ajax
                     let newName = input.value;
-                    if (newName != oldName) {
+                    if (newName !== oldName) {
                         document.querySelector('.disk').innerHTML = "<div class=\"loader\"></div>";
-                        const urlParams = new URLSearchParams(window.location.search);
-                        let url = encodeURI('http://mysitelocal/?provider=yandex&action=rename&path=' + path + "&newName=" + newName + "&oldName=" + oldName + "&page=" + urlParams.get('page'));
-                        let requestURL = new URL("", url);
+                        let page = this.getCurrentPage();
 
-                        const xhr = new XMLHttpRequest();
-                        xhr.open('GET', requestURL, false);
-                        xhr.send();
-                        document.querySelector('.disk').innerHTML = xhr.response;
+                        const response = this.xhrRequest({
+                            provider: 'yandex',
+                            action: 'rename',
+                            path: path,
+                            page: page,
+                            newName: newName,
+                            oldName: oldName
+                        });
+
+                        document.querySelector('.disk').innerHTML = response;
                         this.setObservers();
                     }
                 }
@@ -43,30 +47,104 @@ class CloudDiskProvider {
             button.addEventListener('click', () => {
                 let item = button.closest('.disk-info-table-item');
                 let path = item.getAttribute('data-path');
-                const urlParams = new URLSearchParams(window.location.search);
-                let url = encodeURI('http://mysitelocal/?provider=yandex&action=download&path=' + path);
-                let requestURL = new URL("", url);
 
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', requestURL, false);
-                xhr.send();
-                window.location.href = loadBinaryResource(xhr.response);
+                const response = this.xhrRequest({
+                    provider: 'yandex',
+                    action: 'download',
+                    path: path
+                });
+
+                let link = document.createElement('a');
+                link.setAttribute('href', response);
+                link.setAttribute('download', response);
+                link.click();
             });
         });
 
         deleteBnt.forEach((button) => {
+            button.addEventListener('click', () => {
+                let item = button.closest('.disk-info-table-item');
+                let path = item.getAttribute('data-path');
+                let page = this.getCurrentPage();
 
+                const response = this.xhrRequest({
+                    provider: 'yandex',
+                    action: 'delete',
+                    path: path,
+                    page: page
+                });
+
+                document.querySelector('.disk').innerHTML = response;
+                this.setObservers();
+            });
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const fileInput = document.querySelector('.disk-upload form .userfile');
+            const file = fileInput.files[0];
+            if (!this.validateFile(file)) {
+                document.querySelector('.disk-upload-text').textContent = "Ошибка, приложен некорректный файл!";
+                return false;
+            }
+            let formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('action', 'load');
+            formData.append('page', this.getCurrentPage());
+            formData.append('provider', 'yandex');
+            document.querySelector('.disk').innerHTML = "<div class=\"loader\"></div>";
+            const response = this.xhrRequestFile(formData);
         });
     }
 
-}
+    validateFile(file) {
+        if(file == undefined)
+            return false;
+        if (file.size > 10000000)
+            return false;
+        if (file.type == "application/x-shellscript" || file.type == "application/x-ms-dos-executable") {
+            return false;
+        }
+        return true;
+    }
 
-function loadBinaryResource(url) {
-    const req = new XMLHttpRequest();
-    req.open("GET", url, false);
-    req.overrideMimeType("text/plain; charset=x-user-defined");
-    req.send(null);
-    return req.status === 200 ? req.responseText : "";
+    getCurrentPage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let page = urlParams.get('page');
+        if (page == null) page = 1;
+        return page;
+    }
+
+    xhrRequestFile(send) {
+        let url = 'http://mysitelocal/';
+        const xhr = new XMLHttpRequest();
+        let requestURL = new URL("", url);
+        xhr.open('POST', requestURL);
+        xhr.send(send);
+        xhr.onreadystatechange = this.callback()
+    }
+
+    callback(x, m) {
+        return function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.querySelector('.disk').innerHTML = this.response;
+                (new CloudDiskProvider).setObservers();
+                document.querySelector('.disk-upload-text').textContent = "Файл успешно загружен!";
+            }
+        };
+    }
+
+    xhrRequest(params, send = null) {
+        let url = 'http://mysitelocal/?';
+        for (let key in params) {
+            url = url + "&" + key + "=" + params[key];
+        }
+        const xhr = new XMLHttpRequest();
+        let requestURL = new URL("", url);
+        xhr.open('GET', requestURL, false);
+        xhr.send(send);
+        return xhr.response;
+    }
 }
 
 export default CloudDiskProvider;

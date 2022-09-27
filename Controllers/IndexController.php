@@ -6,7 +6,7 @@ use Modules\CloudDiskProvider;
 
 class IndexController
 {
-    protected $render;
+    protected RenderController $render;
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class IndexController
     {
         $providers = new CloudDiskProvider();
         $providers->renameFile($path, $newName, $oldName);
-        return $this->reloadDisk($providers->getDiskContent());
+        $this->reloadDisk($providers->getDiskContent());
     }
 
     public function actionDownload($path): string
@@ -40,8 +40,22 @@ class IndexController
         return $providers->downloadFile($path);
     }
 
+    public function actionDelete($path)
+    {
+        $providers = new CloudDiskProvider();
+        $providers->deleteFile($path);
+        $this->reloadDisk($providers->getDiskContent());
+    }
+
+    public function actionLoad()
+    {
+        $providers = new CloudDiskProvider();
+        $providers->createNewFile();
+        $this->reloadDisk($providers->getDiskContent());
+    }
+
     public function reloadDisk($content)
     {
-        return $this->render->renderTable($content);
+        $this->render->renderTable($content);
     }
 }
