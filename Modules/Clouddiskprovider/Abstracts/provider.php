@@ -11,4 +11,8 @@ abstract class Provider implements ICloudProvider, ICloudAuth
     {
         return $this::NAMEPROVIDER;
     }
+
+    protected function checkAuth()
+    {
+    }
 }

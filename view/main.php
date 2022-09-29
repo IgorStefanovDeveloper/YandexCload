@@ -2,44 +2,47 @@
     <?php
     if ($hasContent) {
         ?>
-        <div class="disk-info">
-            <div class="disk-info-space">Свободно места на диске: <span
-                        class="disk-info-space-free"><?= $this->getFileSize($content['freeSpace']) ?></span>
-                из <span
-                        class="disk-info-space-free"><?= $this->getFileSize($content['totalSize']) ?></span>
+        <div class="disk__info">
+
+            <div class="space-info">
+                Свободно места на диске:
+                <span class="space-info__space"><?= $this->getFileSize($content['freeSpace']) ?></span>
+                из
+                <span class="space-info__space"><?= $this->getFileSize($content['totalSize']) ?></span>
             </div>
-            <div class="disk-info-table">
+
+            <div class="mod-table disk-info__table">
                 <?php
                 foreach ($content['items'] as $key => $item) {
                     $strNum = $key + 1 + ($content['nav'] * ($currentPage - 1));
                     ?>
-                    <div class="disk-info-table-item" data-name="<?= $item->get('name') ?>"
+                    <div class="mod-table__item js-item" data-name="<?= $item->get('name') ?>"
                          data-path="<?= $item->get('path') ?>">
-                        <div class="disk-info-table-item-name">
-                            <span><?= $strNum . ". " ?></span><input type="text" value="<?= $item->get('name') ?>"
-                                                                     readonly></div>
-                        <div class="disk-info-table-item-size"><?= $this->getFileSize($item->get('size')) ?></div>
-                        <div class="disk-info-table-item-actions">
-                            <div class="disk-info-table-item-actions-btn js-delete">Удалить</div>
-                            <div class="disk-info-table-item-actions-btn js-download">Скачать</div>
-                            <div class="disk-info-table-item-actions-btn js-rename">Переименовать</div>
+                        <div class="mod-table__name">
+                            <span class="mod-table__iterator"><?= $strNum . ". " ?></span>
+                            <input class="mod-table__input" type="text" value="<?= $item->get('name') ?>" readonly>
+                        </div>
+                        <div class="mod-table_size"><?= $this->getFileSize($item->get('size')) ?></div>
+                        <div class="mod-table__actions">
+                            <div class="mod-table__btn js-delete">Удалить</div>
+                            <div class="mod-table__btn js-download">Скачать</div>
+                            <div class="mod-table__btn js-rename">Переименовать</div>
                         </div>
                     </div>
                     <?php
                 }
                 ?>
-                <div class="nav">
+                <div class="nav disk-info__nav">
                     <?php
-                    //TODO need do it in indexController
                     if ($content['count'] > $content['nav']) {
                         ?>
-                        <ul>
+                        <ul class="nav__list">
                             <?
                             for ($i = 1; $i <= $pageCount; $i++) {
                                 if ($i != $currentPage)
-                                    echo "<li><a href='?provider=" . $_REQUEST['provider'] . "&page=" . $i . "'>" . $i . "</a></li>";
+                                    echo "<li class='nav__item'><a class='nav__link' href='?provider=" . $_REQUEST['provider'] . "&page=" . $i . "'>" . $i . "</a></li>";
                                 else
-                                    echo "<li>" . $i . "</li>";
+                                    echo "<li class='nav__item'>" . $i . "</li>";
                             }
                             ?>
                         </ul>
@@ -49,12 +52,11 @@
                 </div>
             </div>
         </div>
-        <div class="disk-upload">
-            <form class="disk-upload-form" enctype="multipart/form-data" action="/?action=load" method="POST">
-                <input type="hidden" name="MAX_FILE_SIZE" value="10000"/>
-                Отправить этот файл: <input class="userfile" name="userfile" type="file"/>
-                <input type="submit" value="Отправить файл"/>
-                <p class="disk-upload-text"></p>
+        <div class="disk__upload">
+            <form class="uploader js-uploader" enctype="multipart/form-data" action="/?action=load" method="POST">
+                Отправить этот файл: <input class="uploader__user-file js-file" name="userfile" type="file"/>
+                <input class="uploader__submit" type="submit" value="Отправить файл"/>
+                <p class="uploader__text js-res-upload"></p>
             </form>
         </div>
         <?php
