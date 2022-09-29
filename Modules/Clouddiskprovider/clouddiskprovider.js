@@ -3,7 +3,7 @@ class CloudDiskProvider {
         const renameBnt = document.querySelectorAll('.js-rename');
         const downloadBnt = document.querySelectorAll('.js-download');
         const deleteBnt = document.querySelectorAll('.js-delete');
-        const form = document.querySelector('.disk-upload-form');
+        const form = document.querySelector('.js-uploader');
 
         renameBnt.forEach((button) => {
             button.addEventListener('click', () => {
@@ -45,7 +45,7 @@ class CloudDiskProvider {
 
         downloadBnt.forEach((button) => {
             button.addEventListener('click', () => {
-                let item = button.closest('.disk-info-table-item');
+                let item = button.closest('.js-item');
                 let path = item.getAttribute('data-path');
 
                 const response = this.xhrRequest({
@@ -63,7 +63,7 @@ class CloudDiskProvider {
 
         deleteBnt.forEach((button) => {
             button.addEventListener('click', () => {
-                let item = button.closest('.disk-info-table-item');
+                let item = button.closest('.js-item');
                 let path = item.getAttribute('data-path');
                 let page = this.getCurrentPage();
 
@@ -81,10 +81,10 @@ class CloudDiskProvider {
 
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-            const fileInput = document.querySelector('.disk-upload form .userfile');
+            const fileInput = document.querySelector('.js-file');
             const file = fileInput.files[0];
             if (!this.validateFile(file)) {
-                document.querySelector('.disk-upload-text').textContent = "Ошибка, приложен некорректный файл!";
+                document.querySelector('.js-res-upload').textContent = "Ошибка, приложен некорректный файл!";
                 return false;
             }
             let formData = new FormData();
@@ -129,7 +129,7 @@ class CloudDiskProvider {
             if (this.readyState == 4 && this.status == 200) {
                 document.querySelector('.disk').innerHTML = this.response;
                 (new CloudDiskProvider).setObservers();
-                document.querySelector('.disk-upload-text').textContent = "Файл успешно загружен!";
+                document.querySelector('.js-res-upload').textContent = "Файл успешно загружен!";
             }
         };
     }

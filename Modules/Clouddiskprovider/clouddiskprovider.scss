@@ -1,5 +1,151 @@
 $mainColor: #61CC4A;
 
+.providers {
+  margin: 30px 0;
+
+  &__item {
+    display: inline-block;
+    background: #000000;
+    border-radius: 12px;
+    color: white;
+    padding: 20px 40px;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  &__img {
+    background-color: red;
+    padding: 10px 13px;
+    border-radius: 27px;
+    margin-right: 5px;
+  }
+
+  &__item:hover {
+    color: red;
+  }
+}
+
+.disk {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  &__info {
+    flex: 3;
+  }
+
+  &__upload {
+    flex: 2;
+  }
+}
+
+.mod-table {
+  box-shadow: 0 12px 65px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-flow: row wrap;
+  border: 1px solid $mainColor;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: black;
+  padding: 10px;
+  color: white;
+
+  &__iterator {
+    font-size: 12px;
+    margin-right: 4px;
+    vertical-align: bottom;
+    display: inline;
+    line-height: 34px;
+  }
+
+  &__item {
+    display: flex;
+    width: 100%;
+    margin: 10px 0;
+    justify-content: space-around;
+    border-bottom: 1px dotted $mainColor;
+  }
+
+  &__input {
+    background: black;
+    color: white;
+    margin-bottom: 5px;
+  }
+
+  &__name {
+    flex: 150px;
+    display: flex;
+  }
+
+
+  &__size {
+    display: flex;
+    flex: 50px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    flex: 2;
+  }
+
+  &__btn {
+    cursor: pointer;
+  }
+
+  &__btn:hover {
+    color: $mainColor;
+  }
+}
+
+.uploader {
+  margin: 30px 0 0 20px;
+
+  &__submit {
+    display: block;
+    margin: 10px auto;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: none;
+    padding: 10px 20px;
+    border: 1px solid $mainColor;
+    outline: none;
+    color: #000;
+    line-height: 1em;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+
+  &__submit:hover {
+    color: white;
+    background: linear-gradient(90deg, #11df9e, $mainColor);
+  }
+}
+
+.nav {
+  width: 100%;
+
+  &__list {
+    list-style: none;
+    display: flex;
+    align-content: center;
+    margin: 10px auto;
+    justify-content: space-around;
+    padding: 0;
+  }
+
+  &__item {
+    margin: 0 10px;
+  }
+
+  &__link {
+    color: $mainColor;
+  }
+}
+
 .loader {
   border: 16px solid #f3f3f3;
   border-top: 16px solid $mainColor;
@@ -18,149 +164,6 @@ $mainColor: #61CC4A;
   }
 }
 
-.providers {
-  margin: 30px 0;
-
-  &-button {
-    display: inline-block;
-    background: #000000;
-    border-radius: 12px;
-    color: white;
-    padding: 20px 40px;
-    margin-top: 10px;
-    text-decoration: none;
-
-    img {
-      background-color: red;
-      padding: 10px 13px;
-      border-radius: 27px;
-      margin-right: 5px;
-    }
-  }
-
-  &-button:hover {
-    color: red;
-  }
-}
-
-.disk {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-
-  &-info {
-    flex: 3;
-
-    &-table {
-      box-shadow: 0 12px 65px rgba(0, 0, 0, 0.15);
-      display: flex;
-      flex-flow: row wrap;
-      border: 1px solid $mainColor;
-      border-radius: 10px;
-      margin: 10px 0;
-      background-color: black;
-      padding: 10px;
-      color: white;
-
-      &-item {
-        display: flex;
-        width: 100%;
-        margin: 10px 0;
-        justify-content: space-around;
-        border-bottom: 1px dotted $mainColor;
-
-        &-name {
-          flex: 150px;
-          display: flex;
-
-          input {
-            background: black;
-            color: white;
-            margin-bottom: 5px;
-          }
-
-          span {
-            font-size: 12px;
-            margin-right: 4px;
-            line-height: inherit;
-            vertical-align: bottom;
-            display: inline;
-            line-height: 34px;
-          }
-        }
-
-        &-size {
-          display: flex;
-          flex: 50px;
-        }
-
-        &-actions {
-          display: flex;
-          flex-flow: row;
-          justify-content: space-around;
-          flex: 2;
-
-          &-btn {
-            cursor: pointer;
-          }
-
-          &-btn:hover {
-            color: $mainColor;
-          }
-        }
-      }
-    }
-  }
-
-  &-upload {
-    flex: 2;
-
-    &-form {
-      margin: 30px 0 0 20px;
-
-      input[type='submit'] {
-        display: block;
-        margin: 10px auto;
-        box-sizing: border-box;
-        position: relative;
-        overflow: hidden;
-        text-align: center;
-        box-shadow: none;
-        display: block;
-        padding: 10px 20px;
-        border: 1px solid $mainColor;
-        outline: none;
-        color: #000;
-        line-height: 1em;
-        border-radius: 5px;
-        text-decoration: none;
-      }
-
-      input[type='submit']:hover {
-        color: white;
-        background: linear-gradient(90deg, #11df9e, $mainColor);
-      }
-    }
-  }
-}
-
-.nav {
-  width: 100%;
-
-  ul {
-    list-style: none;
-    display: flex;
-    align-content: center;
-    margin: 10px auto;
-    justify-content: space-around;
-    padding: 0;
-
-    li {
-      margin: 0 10px;
-
-      a {
-        color: $mainColor;
-      }
-    }
-  }
+.container {
+  max-width: 1320px;
 }

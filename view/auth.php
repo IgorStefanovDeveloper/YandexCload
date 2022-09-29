@@ -1,8 +1,8 @@
 <div class="providers">
-    <div class="providers-text">Выбирите сервис:</div>
+    <div class="providers__text">Выбирите сервис:</div>
     <?php foreach ($providersList as $provider) { ?>
-        <a class="providers-button" href="<?= $provider['link'] ?>">
-            <img src="/upload/img/yandex.svg"
+        <a class="providers__item" href="<?= $provider['link'] ?>">
+            <img class="providers__img" src="/upload/img/yandex.svg"
                  alt="<?= $provider['label'] ?>"><?= $provider['label'] ?>
         </a>
     <?php } ?>
