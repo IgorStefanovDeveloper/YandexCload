@@ -28,6 +28,10 @@ class RenderController
 
     public function renderTable($content)
     {
+        $currentPage = $_REQUEST['page'] ?? 1;
+        $hasContent = is_array($content);
+        if ($hasContent)
+            $pageCount = ceil($content['count'] / $content['nav']);
         include __DIR__ . "/../view/main.php";
     }
 

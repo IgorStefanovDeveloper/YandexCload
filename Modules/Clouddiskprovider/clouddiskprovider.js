@@ -7,7 +7,7 @@ class CloudDiskProvider {
 
         renameBnt.forEach((button) => {
             button.addEventListener('click', () => {
-                let item = button.closest('.disk-info-table-item');
+                let item = button.closest('.js-item');
                 let input = item.querySelector('input');
                 let path = item.getAttribute('data-path');
                 let oldName = item.getAttribute('data-name');
