@@ -5,6 +5,7 @@ use Controllers\IndexController;
 require_once "vendor/autoload.php";
 
 $indexController = new IndexController();
+
 if (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == "rename") {
         $path = $_REQUEST['path'] ?? false;

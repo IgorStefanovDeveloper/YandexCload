@@ -26,9 +26,10 @@ class YandexDisk extends Provider
         $this->secretToken = file_get_contents(__DIR__ . "/../Tokens/.yandexdisk_secret");
     }
 
-    public function setAccessCode($code): void
+    public function setAccessCode($code): string
     {
         $this->accessCode = $code;
+        return $code;
     }
 
     public function showDiskContent($page = 1): array
