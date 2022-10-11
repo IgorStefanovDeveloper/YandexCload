@@ -6,7 +6,8 @@
     "php": ">=7.4",
     "php-http/curl-client": ">=v1.4.0",
     "arhitector/yandex": "dev-master",
-    "vlucas/phpdotenv": "^5.4"
+    "vlucas/phpdotenv": "^5.4",
+    "guzzlehttp/guzzle": "^7.5"
   },
   "autoload": {
     "psr-4": {

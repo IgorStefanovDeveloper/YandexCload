@@ -4,11 +4,6 @@ namespace Modules\CloudDiskProvider\Classes;
 
 use Arhitector\Yandex\Disk;
 use Modules\CloudDiskProvider\Abstracts\Provider;
-use MongoDB\Driver\Exception\Exception;
-
-/*
- * Class to work with Yandex disk
- * */
 
 class YandexDisk extends Provider
 {
@@ -62,7 +57,9 @@ class YandexDisk extends Provider
         move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile);
 
         $disk = new Disk($this->accessCode);
+
         $resource = $disk->getResource(basename($_FILES['file']['name']));
+
         if (!$resource->has()) {
             $resource->upload($uploadFile);
         }
@@ -92,30 +89,28 @@ class YandexDisk extends Provider
         return self::AUTHPATTERNSTR . $this->authToken;
     }
 
-    public function extractAccessCode($authCode): string
+    protected function getHeadersForAccessRequest(string $authCode): array
     {
-        $query = [
-            'grant_type' => 'authorization_code',
-            'code' => $authCode,
-            'client_id' => $this->authToken,
-            'client_secret' => $this->secretToken
+        return [
+            'multipart' => [
+                [
+                    'name' => 'grant_type',
+                    'contents' => 'authorization_code'
+                ],
+                [
+                    'name' => 'code',
+                    'contents' => $authCode
+                ],
+                [
+                    'name' => 'client_id',
+                    'contents' => $this->authToken,
+                ],
+                [
+                    'name' => 'client_secret',
+                    'contents' => $this->secretToken,
+                ],
+            ],
+            "Content-type" => "application/x-www-form-urlencoded"
         ];
-
-        $query = http_build_query($query);
-
-        $header = "Content-type: application/x-www-form-urlencoded";
-
-        $opts = array('http' =>
-            array(
-                'method' => 'POST',
-                'header' => $header,
-                'content' => $query
-            )
-        );
-        $context = stream_context_create($opts);
-        $result = file_get_contents(self::TOKENPATH, false, $context);
-        $result = json_decode($result);
-
-        return $result->access_token;
     }
 }

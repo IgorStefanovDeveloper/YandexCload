@@ -8,7 +8,7 @@ namespace Modules\CloudDiskProvider\Interfaces;
 
 interface CloudAuthInterface
 {
-    public function extractAccessCode($authCode);
+    public function extractAccessCode(string $authCode): string;
 
-    public function getAuthLink();
+    public function getAuthLink(): string;
 }
