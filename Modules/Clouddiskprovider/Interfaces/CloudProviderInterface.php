@@ -6,7 +6,7 @@ namespace Modules\CloudDiskProvider\Interfaces;
  * Interface to work with cloud disk
  * */
 
-interface ICloudProvider
+interface CloudProviderInterface
 {
     public function showDiskContent($accessCode);
 

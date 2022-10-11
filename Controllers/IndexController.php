@@ -17,6 +17,7 @@ class IndexController
     {
         $providers = new CloudDiskProvider();
         $providersList = $providers->getListOfAvailableProviders();
+
         $this->render->renderAuth($providersList);
     }
 
@@ -31,6 +32,7 @@ class IndexController
     {
         $providers = new CloudDiskProvider();
         $providers->renameFile($path, $newName, $oldName);
+
         $this->reloadDisk($providers->getDiskContent());
     }
 
@@ -44,6 +46,7 @@ class IndexController
     {
         $providers = new CloudDiskProvider();
         $providers->deleteFile($path);
+
         $this->reloadDisk($providers->getDiskContent());
     }
 
@@ -51,6 +54,7 @@ class IndexController
     {
         $providers = new CloudDiskProvider();
         $providers->createNewFile();
+
         $this->reloadDisk($providers->getDiskContent());
     }
 

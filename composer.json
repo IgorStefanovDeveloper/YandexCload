@@ -5,7 +5,8 @@
   "require": {
     "php": ">=7.4",
     "php-http/curl-client": ">=v1.4.0",
-    "arhitector/yandex": "dev-master"
+    "arhitector/yandex": "dev-master",
+    "vlucas/phpdotenv": "^5.4"
   },
   "autoload": {
     "psr-4": {

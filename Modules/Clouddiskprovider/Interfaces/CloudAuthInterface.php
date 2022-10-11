@@ -6,7 +6,7 @@ namespace Modules\CloudDiskProvider\Interfaces;
 * Interface for cloud drive authentication
 * */
 
-interface ICloudAuth
+interface CloudAuthInterface
 {
     public function extractAccessCode($authCode);
 

@@ -28,7 +28,7 @@ class CloudDiskProvider
             try {
                 $accessCode = $this->avalibleProviders[$_REQUEST['provider']]->extractAccessCode($_REQUEST['code']);
                 setcookie("access", $accessCode, time() + 3600, "/");
-            } catch (CustomException $e) {
+            } catch (ProviderException $e) {
                 echo $e->getMessage();
             }
         } elseif (isset($_COOKIE["access"])) {

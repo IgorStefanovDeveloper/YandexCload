@@ -1,11 +1,13 @@
 .idea/*
 node_modules/*
-upload/*
+public/upload/*
+!public/upload/.gitkeep
+!public/upload/tmp/.gitkeep
+!public/upload/img/.gitkeep
 vendor/*
-dist/*
+public/dist/*
 package-lock.json
 composer.lock
-test.php
 .env
 todo.txt
 Modules/Clouddiskprovider/Tokens

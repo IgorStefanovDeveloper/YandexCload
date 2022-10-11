@@ -4,6 +4,7 @@ namespace Modules\CloudDiskProvider\Classes;
 
 use Arhitector\Yandex\Disk;
 use Modules\CloudDiskProvider\Abstracts\Provider;
+use MongoDB\Driver\Exception\Exception;
 
 /*
  * Class to work with Yandex disk
@@ -22,13 +23,15 @@ class YandexDisk extends Provider
 
     public function __construct()
     {
-        $this->authToken = file_get_contents(__DIR__ . "/../Tokens/.yandexdisk_auth");
-        $this->secretToken = file_get_contents(__DIR__ . "/../Tokens/.yandexdisk_secret");
+        // TODO add try catch
+        $this->authToken = $_ENV['YANDEX_AUTH_TOKEN'];
+        $this->secretToken = $_ENV['YANDEX_SECRET_TOKEN'];
     }
 
     public function setAccessCode($code): string
     {
         $this->accessCode = $code;
+
         return $code;
     }
 
@@ -54,13 +57,13 @@ class YandexDisk extends Provider
 
     public function createNewFile()
     {
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/upload/tmp/' ;
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/upload/tmp/';
         $uploadFile = $uploadDir . basename($_FILES['file']['name']);
         move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile);
 
         $disk = new Disk($this->accessCode);
         $resource = $disk->getResource(basename($_FILES['file']['name']));
-        if(!$resource->has()) {
+        if (!$resource->has()) {
             $resource->upload($uploadFile);
         }
     }
@@ -70,7 +73,9 @@ class YandexDisk extends Provider
         $disk = new Disk($this->accessCode);
         $resource = $disk->getResource($path, 0);
         $file = '/upload/tmp/' . $resource->get('name');
+
         $resource->download($_SERVER['DOCUMENT_ROOT'] . $file, true);
+
         return $file;
     }
 
@@ -78,6 +83,7 @@ class YandexDisk extends Provider
     {
         $disk = new Disk($this->accessCode);
         $resource = $disk->getResource($path, 0);
+
         return $resource->move(str_replace($oldName, $newName, $path));
     }
 
@@ -88,12 +94,13 @@ class YandexDisk extends Provider
 
     public function extractAccessCode($authCode): string
     {
-        $query = array(
+        $query = [
             'grant_type' => 'authorization_code',
             'code' => $authCode,
             'client_id' => $this->authToken,
             'client_secret' => $this->secretToken
-        );
+        ];
+
         $query = http_build_query($query);
 
         $header = "Content-type: application/x-www-form-urlencoded";
