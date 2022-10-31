@@ -23,11 +23,11 @@ class YandexDisk extends Provider
         $this->secretToken = $_ENV['YANDEX_SECRET_TOKEN'];
     }
 
-    public function setAccessCode($code): string
+    public function setAccessCode($code): bool
     {
         $this->accessCode = $code;
 
-        return $code;
+        return true;
     }
 
     public function showDiskContent($page = 1): array
@@ -50,19 +50,40 @@ class YandexDisk extends Provider
         $resource->delete();
     }
 
-    public function createNewFile()
+    public function createNewFile($fileArray)
     {
         $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/upload/tmp/';
-        $uploadFile = $uploadDir . basename($_FILES['file']['name']);
-        move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile);
+        $uploadFile = $uploadDir . basename($fileArray['name']);
+        move_uploaded_file($fileArray['tmp_name'], $uploadFile);
 
         $disk = new Disk($this->accessCode);
 
-        $resource = $disk->getResource(basename($_FILES['file']['name']));
+        $resource = $disk->getResource(basename($fileArray['name']));
 
         if (!$resource->has()) {
             $resource->upload($uploadFile);
         }
+    }
+
+    public function loadFileByUrl($fileUrl, $accessCode)
+    {
+        $result = "";
+
+        $disk = new Disk($accessCode);
+        $uploadFile = $fileUrl;
+
+        $filePath = explode('/', $fileUrl);
+        $fileName = end($filePath);
+
+        $resource = $disk->getResource($fileName);
+
+        if (!$resource->has()) {
+            $resource->upload($uploadFile);
+        } else {
+            $result = "Файл уже находится на диске";
+        }
+
+        return " Загрузка успешна";
     }
 
     public function downloadFile($path): string
@@ -84,9 +105,15 @@ class YandexDisk extends Provider
         return $resource->move(str_replace($oldName, $newName, $path));
     }
 
-    public function getAuthLink(): string
+    public function getAuthLink($site = false): string
     {
-        return self::AUTHPATTERNSTR . $this->authToken;
+        $url = self::AUTHPATTERNSTR . $this->authToken;
+
+        if ($site) {
+            $url .= '&redirect_uri=' . $site;
+        }
+
+        return $url;
     }
 
     protected function getHeadersForAccessRequest(string $authCode): array

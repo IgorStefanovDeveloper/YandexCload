@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title><?= $title ?></title>
+    <title>{{ title }}</title>
     <link href="/dist/styles.css" rel="stylesheet">
     <script src="/dist/bundle.js"></script>
 </head>
@@ -24,3 +24,10 @@
     </div>
 </header>
 <div class="container">
+    {% block body %}{% endblock %}
+</div>
+<footer>
+
+</footer>
+</body>
+</html>

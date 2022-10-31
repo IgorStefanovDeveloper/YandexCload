@@ -12,7 +12,7 @@ interface CloudProviderInterface
 
     public function deleteFile($path);
 
-    public function createNewFile();
+    public function createNewFile($fileArray);
 
     public function downloadFile($path);
 

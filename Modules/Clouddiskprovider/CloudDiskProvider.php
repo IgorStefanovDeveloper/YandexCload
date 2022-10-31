@@ -8,46 +8,76 @@ use Modules\CloudDiskProvider\Classes\ProviderException;
 class CloudDiskProvider
 {
     private array $avalibleProviders;
+    private string $currentProvider;
 
-    public function __construct()
+    public function __construct($code = false, $provider = false)
     {
         $this->avalibleProviders = ["yandex" => new YandexDisk()];
+
+        if ($provider !== false) {
+            $this->currentProvider = $provider;
+        }
+
+        if ($code !== false) {
+            $auth = $this->checkAuth($code);
+
+            if ($auth['status'] === false) {
+                return $auth;
+            }
+        }
+
+        return ['status' => true];
     }
 
-    private function auth()
+    public function getAuthTokenAjax($site): string
     {
-        if (isset($_REQUEST['provider'])) {
-            if (!array_key_exists($_REQUEST['provider'], $this->avalibleProviders))
-                return "Не задан поставщик данных, попробуйте авторизоваться повторно.";
-        } else
-            return "Не задан поставщик данных, попробуйте авторизоваться повторно.";
+        return $this->avalibleProviders[$this->currentProvider]->getAuthLink($site);
+    }
+
+    public function auth($code = false): array
+    {
+        $result = [];
+
+        if (isset($this->currentProvider)) {
+            if (!array_key_exists($this->currentProvider, $this->avalibleProviders))
+                $result = ["status" => false, "content" => "Не задан поставщик данных, попробуйте авторизоваться повторно."];
+        } else {
+            $result = ["status" => false, "content" => "Не задан поставщик данных, попробуйте авторизоваться повторно."];
+        }
 
         $accessCode = false;
-        //TODO add crypt
-        if (isset($_REQUEST['code']) && !isset($_COOKIE["access"]) && $_REQUEST['provider']) {
+
+        if (isset($code) && !isset($_COOKIE["access"]) && $this->currentProvider) {
             try {
-                $accessCode = $this->avalibleProviders[$_REQUEST['provider']]->extractAccessCode($_REQUEST['code']);
+                $accessCode = $this->avalibleProviders[$this->currentProvider]->extractAccessCode($code);
+
+                $this->avalibleProviders[$this->currentProvider]->setAccessCode($accessCode);
+
                 setcookie("access", $accessCode, time() + 3600, "/");
             } catch (ProviderException $e) {
-                echo $e->getMessage();
+                $result = ["status" => false, "content" => $e->getMessage()];
             }
         } elseif (isset($_COOKIE["access"])) {
             $accessCode = $_COOKIE["access"];
         }
-        if ($this->avalibleProviders[$_REQUEST['provider']]->setAccessCode($accessCode) == "")
-            return "Неудачная авторизация";
-        return true;
+
+        if ($this->avalibleProviders[$this->currentProvider]->setAccessCode($accessCode) !== true) {
+            $result = ["status" => false, "content" => "Неудачная авторизация"];
+        }
+
+        return ["status" => true, 'accessCode' => $accessCode];
     }
 
-    protected function checkAuth():bool
+    protected function checkAuth($code = false): array
     {
-        $result = true;
+        $result = ["status" => true];
+
         try {
-            $authResult = $this->auth();
-            if ($authResult !== true) throw new ProviderException($authResult, 123);
+            $authResult = $this->auth($code);
+
+            if ($authResult['status'] !== true) throw new ProviderException($authResult['content'], 123);
         } catch (ProviderException $e) {
-            $result = false;
-            echo $e;
+            $result = ["status" => false, "content" => $e->getMessage()];
         } finally {
             return $result;
         }
@@ -56,6 +86,7 @@ class CloudDiskProvider
     public function getListOfAvailableProviders(): array
     {
         $authArr = [];
+
         foreach ($this->avalibleProviders as $prov) {
             $authArr[] = ['link' => $prov->getAuthLink(), 'label' => $prov->getProviderLabel()];
         }
@@ -63,35 +94,66 @@ class CloudDiskProvider
         return $authArr;
     }
 
-    public function getDiskContent()
+    public function getDiskContent(): array
     {
-        if($this->checkAuth() === false) return false;
+        $auth = $this->checkAuth();
+
+        if ($auth['status'] === false) {
+            return $auth;
+        }
+
         $page = $_REQUEST['page'] ?? 1;
-        return $this->avalibleProviders[$_REQUEST['provider']]->showDiskContent($page);
+
+        return $this->avalibleProviders[$this->currentProvider]->showDiskContent($page);
     }
 
     public function renameFile($path, $newName, $oldName)
     {
-        if($this->checkAuth() === false) return false;
-        return $this->avalibleProviders[$_REQUEST['provider']]->renameFile($path, $newName, $oldName);
+        $auth = $this->checkAuth();
+
+        if ($auth['status'] === false) {
+            return $auth;
+        }
+
+        return $this->avalibleProviders[$this->currentProvider]->renameFile($path, $newName, $oldName);
     }
 
     public function downloadFile($path): string
     {
-        if($this->checkAuth() === false) return false;
-        return $this->avalibleProviders[$_REQUEST['provider']]->downloadFile($path);
+        $auth = $this->checkAuth();
+
+        if ($auth['status'] === false) {
+            return $auth;
+        }
+
+        return $this->avalibleProviders[$this->currentProvider]->downloadFile($path);
     }
 
-    public function createNewFile()
+    public function createNewFile($fileArray)
     {
-        if($this->checkAuth() === false) return false;
-        $this->avalibleProviders[$_REQUEST['provider']]->createNewFile();
+        $auth = $this->checkAuth();
+
+        if ($auth['status'] === false) {
+            return $auth;
+        }
+
+        $this->avalibleProviders[$this->currentProvider]->createNewFile($fileArray);
+    }
+
+    public function loadFileByUrl($accessCode, $fileUrl)
+    {
+        return $this->avalibleProviders[$this->currentProvider]->loadFileByUrl($fileUrl, $accessCode);
     }
 
     public function deleteFile($path)
     {
-        if($this->checkAuth() === false) return false;
-        $this->avalibleProviders[$_REQUEST['provider']]->deleteFile($path);
+        $auth = $this->checkAuth();
+
+        if ($auth['status'] === false) {
+            return $auth;
+        }
+
+        $this->avalibleProviders[$this->currentProvider]->deleteFile($path);
     }
 }
 

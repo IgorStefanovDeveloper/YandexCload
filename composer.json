@@ -7,7 +7,11 @@
     "php-http/curl-client": ">=v1.4.0",
     "arhitector/yandex": "dev-master",
     "vlucas/phpdotenv": "^5.4",
-    "guzzlehttp/guzzle": "^7.5"
+    "guzzlehttp/guzzle": "^7.5",
+    "slim/psr7": "^1.5",
+    "slim/slim": "4.*",
+    "twig/twig": "^3.0",
+    "laminas/laminas-diactoros": "^2.20"
   },
   "autoload": {
     "psr-4": {

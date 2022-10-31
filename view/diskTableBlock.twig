@@ -1,0 +1,51 @@
+{% import "sizeFormat.twig" as format %}
+
+<div class="disk">
+    <div class="disk__info">
+        <div class="space-info">
+            Свободно места на диске:
+            <span class="space-info__space">{{ format.bytesToSize(content['freeSpace']) }}</span>
+            из
+            <span class="space-info__space">{{ format.bytesToSize(content['totalSize']) }}</span>
+        </div>
+        <div class="mod-table disk-info__table">
+            {% for key,item in content['items'] %}
+                <div class="mod-table__item js-item" data-name="{{ item.get('name') }}"
+                     data-path="{{ item.get('path') }}">
+                    <div class="mod-table__name">
+                        <span class="mod-table__iterator">{{ key + 1 + (content['nav'] * (currentPage - 1)) }}</span>
+                        <input class="mod-table__input" type="text" value="{{ item.get('name') }}" readonly>
+                    </div>
+                    <div class="mod-table_size">{{ format.bytesToSize(item.get('size')) }}</div>
+                    <div class="mod-table__actions">
+                        <div class="mod-table__btn js-delete">Удалить</div>
+                        <div class="mod-table__btn js-download">Скачать</div>
+                        <div class="mod-table__btn js-rename">Переименовать</div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="nav disk-info__nav">
+                {% if content['count'] >  content['nav'] %}
+                    <ul class="nav__list">
+                        {% for i in 1..pageCount %}
+                            {% if i != currentPage %}
+                                <li class='nav__item'>
+                                    <a class='nav__link' href='/provider/{{ provider }}?page={{ i }}'>{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="nav__item">{{ i }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="disk__upload">
+        <form class="uploader js-uploader" enctype="multipart/form-data" action="/?action=load" method="POST">
+            Отправить этот файл: <input class="uploader__user-file js-file" name="userfile" type="file"/>
+            <input class="uploader__submit" type="submit" value="Отправить файл"/>
+            <p class="uploader__text js-res-upload"></p>
+        </form>
+    </div>
+</div>

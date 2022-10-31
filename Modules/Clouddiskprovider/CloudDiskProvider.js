@@ -28,13 +28,11 @@ class CloudDiskProvider {
                         let page = this.getCurrentPage();
 
                         const response = this.xhrRequest({
-                            provider: 'yandex',
-                            action: 'rename',
                             path: path,
                             page: page,
                             newName: newName,
                             oldName: oldName
-                        });
+                        }, "rename", 'yandex');
 
                         document.querySelector('.disk').innerHTML = response;
                         this.setObservers();
@@ -47,16 +45,15 @@ class CloudDiskProvider {
             button.addEventListener('click', () => {
                 let item = button.closest('.js-item');
                 let path = item.getAttribute('data-path');
+                let name = item.getAttribute('data-name');
 
                 const response = this.xhrRequest({
-                    provider: 'yandex',
-                    action: 'download',
                     path: path
-                });
+                }, 'download', 'yandex');
 
                 let link = document.createElement('a');
                 link.setAttribute('href', response);
-                link.setAttribute('download', response);
+                link.setAttribute('download', name);
                 link.click();
             });
         });
@@ -68,11 +65,9 @@ class CloudDiskProvider {
                 let page = this.getCurrentPage();
 
                 const response = this.xhrRequest({
-                    provider: 'yandex',
-                    action: 'delete',
                     path: path,
                     page: page
-                });
+                }, 'delete', 'yandex');
 
                 document.querySelector('.disk').innerHTML = response;
                 this.setObservers();
@@ -93,12 +88,12 @@ class CloudDiskProvider {
             formData.append('page', this.getCurrentPage());
             formData.append('provider', 'yandex');
             document.querySelector('.disk').innerHTML = "<div class=\"loader\"></div>";
-            const response = this.xhrRequestFile(formData);
+            const response = this.xhrRequestFile('load', 'yandex', formData);
         });
     }
 
     validateFile(file) {
-        if(file == undefined)
+        if (file == undefined)
             return false;
         if (file.size > 10000000)
             return false;
@@ -115,10 +110,10 @@ class CloudDiskProvider {
         return page;
     }
 
-    xhrRequestFile(send) {
-        let url = 'http://mysitelocal/';
+    xhrRequestFile(action, provider, send) {
+        let url = '/provider/' + provider + '/action/' + action + '?';
         const xhr = new XMLHttpRequest();
-        let requestURL = new URL("", url);
+        let requestURL = new URL('https://provider.ru' + url);
         xhr.open('POST', requestURL);
         xhr.send(send);
         xhr.onreadystatechange = this.callback()
@@ -134,13 +129,13 @@ class CloudDiskProvider {
         };
     }
 
-    xhrRequest(params, send = null) {
-        let url = 'http://mysitelocal/?';
+    xhrRequest(params, action, provider, send = null) {
+        let url = '/provider/' + provider + '/action/' + action + '?';
         for (let key in params) {
             url = url + "&" + key + "=" + params[key];
         }
         const xhr = new XMLHttpRequest();
-        let requestURL = new URL("", url);
+        let requestURL = new URL('https://provider.ru' + url);
         xhr.open('GET', requestURL, false);
         xhr.send(send);
         return xhr.response;

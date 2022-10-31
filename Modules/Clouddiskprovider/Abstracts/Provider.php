@@ -13,10 +13,6 @@ abstract class Provider implements CloudAuthInterface, CloudProviderInterface
         return $this::NAMEPROVIDER;
     }
 
-    protected function checkAuth()
-    {
-    }
-
     protected function getHeadersForAccessRequest(string $authCode): array
     {
         return [];

@@ -1,0 +1,13 @@
+{% extends 'base.twig' %}
+
+{% block body %}
+<div class="providers">
+    <div class="providers__text">Выбирите сервис:</div>
+    {% for provider in providersList %}
+    <a class="providers__item" href="{{ provider['link'] }}">
+        <img class="providers__img" src="/upload/img/yandex.svg"
+             alt="{{  provider['label'] }}">{{  provider['label'] }}
+    </a>
+    {% endfor %}
+</div>
+{% endblock body %}
